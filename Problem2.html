@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        #timer {
+            font-size: 2em;
+            margin: 20px;
+        }
+        #notification {
+            display: none;
+            background-color: yellow;
+            padding: 10px;
+            margin: 20px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Countdown Timer</h1>
+    <input type="number" id="duration" placeholder="Enter duration in seconds">
+    <button onclick="startTimer()">Start Timer</button>
+    <div id="timer">0</div>
+
+    <h1>Notifications</h1>
+    <button onclick="delayedNotification(5000)">Show Delayed Notification</button>
+    <button onclick="startRepeatNotification(3000)">Start Repeat Notification</button>
+    <button onclick="stopRepeatNotification()">Stop Repeat Notification</button>
+    <div id="notification">This is a notification</div>
+
+    <script>
+        let timerInterval;
+        let repeatNotificationInterval;
+
+        function startTimer() {
+            const duration = parseInt(document.getElementById('duration').value);
+            let timeRemaining = duration;
+            document.getElementById('timer').textContent = timeRemaining;
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                document.getElementById('timer').textContent = timeRemaining;
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Timer expired!');
+                }
+            }, 1000);
+        }
+
+        function delayedNotification(delay) {
+            setTimeout(() => {
+                alert('This is a delayed notification');
+            }, delay);
+        }
+
+        function startRepeatNotification(interval) {
+            repeatNotificationInterval = setInterval(() => {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                notification.textContent = 'This is a repeated notification';
+            }, interval);
+        }
+
+        function stopRepeatNotification() {
+            clearInterval(repeatNotificationInterval);
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

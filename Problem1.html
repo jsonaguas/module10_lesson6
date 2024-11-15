@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        #userData {
+            margin: 20px;
+        }
+        #characterGrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding:10px;
+            background-color: beige;
+        }
+        .character {
+            text-align: center;
+        }
+        .character img {
+            width: 100px;
+            height: 150px;
+        }
+        .character img:hover{
+            transform: scale(1.1);
+        }
+
+        p {
+            color:rgb(33, 144, 218);
+        }
+    </style>
+</head>
+<body>
+    <div id="userData">
+        <h2>Marvel Character Database</h2>
+        <div id="characterGrid"></div>
+    </div>
+
+    <script>
+        async function fetchMarvelData() {
+            const response = await fetch(`http://gateway.marvel.com/v1/public/characters?ts=1&apikey=0341cd0c30b09ddc69922058cf2819ef&hash=c2c4592f3b2eb488b52ea8b5e7d70c59`);
+            const marvelData = await response.json();
+            return marvelData;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const characterData = await fetchMarvelData();
+                const characterGrid = document.getElementById('characterGrid');
+
+                // Displaying Marvel data
+                characterData.data.results.slice(0, 20).forEach(character => {
+                    const characterElement = document.createElement('div');
+                    characterElement.classList.add('character');
+                    characterElement.innerHTML = `
+                        <img src="${character.thumbnail.path}.${character.thumbnail.extension}" alt="${character.name}" />
+                        <p>${character.name}</p>
+                    `;
+                    characterGrid.appendChild(characterElement);
+                });
+
+                console.log("List of all characters fetched:");
+                characterData.data.results.forEach(character => {
+                    console.log(character.name);
+                });
+
+            } catch (error) {
+                console.error("Error fetching Marvel data:", error);
+                const marvelInfoElement = document.getElementById('userInfo');
+                marvelInfoElement.textContent = "Failed to fetch Marvel data";
+            }
+        });
+    </script>
+</body>
+</html>
